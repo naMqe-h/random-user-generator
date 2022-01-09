@@ -61,15 +61,11 @@ app.get("/api/user-data", (req, res) => {
             }
             data.push(temp)
         }
-        res.send(data)
+        return res.json(data)
     } else {
-        res.send({error: 'Podaj wszystkie query'})
+        return res.send({error: 'Podaj poprawnie wszystkie wymagane parametry (count, year)'})
     }
-
-    res.send({ error: 'Nieznany błąd'})
-    
     
 });
-
 
 app.listen(5000)
