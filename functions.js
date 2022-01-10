@@ -29,11 +29,19 @@ const getNames = () => {
     
 }
 
-const getBirthday = (year) => {
-    birthday = randomDate(new Date(year, 0, 1), new Date(year, 12, 31))
-    dateSplit = birthday.split('.')
-    if(dateSplit[2] !== year) dateSplit[2] = year
-    return dateSplit.join('.')
+const getBirthday = (year, since, until) => {
+    if (year) {
+        birthday = randomDate(new Date(year, 0, 1), new Date(year, 12, 31))
+        dateSplit = birthday.split('.')
+        if(dateSplit[2] !== year) dateSplit[2] = year
+        return dateSplit.join('.')
+    } else {
+        birthday = randomDate(new Date(since, 0, 1), new Date(until, 12, 31))
+        dateSplit = birthday.split('.')
+        if(dateSplit[2] > until) dateSplit[2] = until
+        return dateSplit.join('.')
+    }
+    
 }
 
 const getPesel = (year) => {
@@ -82,4 +90,11 @@ const getPesel = (year) => {
     return tempPesel.join('')
 }
 
-module.exports = { randomNumbers, getNames, getBirthday, getPesel}
+const countErrorHandle = (count) => {
+    if(parseInt(count) > 3000) return {error: 'Maksymalna ilość użytkowników na jednym zapytaniu to 3000'}
+    if(count == 0) return {error: 'Minimalna ilość użytkowników do wygenerowania to 1'}
+
+    return null
+}
+
+module.exports = { randomNumbers, getNames, getBirthday, getPesel, countErrorHandle}
