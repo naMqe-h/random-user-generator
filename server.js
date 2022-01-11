@@ -1,7 +1,15 @@
 const express = require('express');
+const cors = require('cors')
 const { getNames, getBirthday, getPesel, countErrorHandle } = require('./functions')
 
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,
+    optionSuccessStatus:200
+}
+
 const app = express()
+app.use(cors(corsOptions))
 
 app.get("/api/users/single-year", (req, res) => {
     const { count = 5, year } = req.query
@@ -12,7 +20,7 @@ app.get("/api/users/single-year", (req, res) => {
     const isError = countErrorHandle(count)
     if(isError) return res.send(isError)
 
-    if(year < 1800 || year > 2099) return res.send({error: `Podaj poprawną wartość parametru 'year' z przediału 1800-2099`})
+    if(year < 1800 || year > 2099) return res.send({error: `Enter a valid value of the 'year' parameter in the range 1800-2099`})
 
     if(year) {
         for(let i = 0; i < count; i++) {
@@ -30,7 +38,7 @@ app.get("/api/users/single-year", (req, res) => {
         }
         return res.json(data)
     } else {
-        return res.send({error: 'Podaj poprawnie wszystkie wymagane parametry (count, year)'})
+        return res.send({error: 'Enter correctly all required parameters (count, year)'})
     }
     
 });
@@ -43,8 +51,8 @@ app.get("/api/users", (req, res) => {
     const isError = countErrorHandle(count)
     if(isError) return res.send(isError)
 
-    if(since < 1800 || since > 2099 || until < 1800 || until > 2099) return res.send({error: 'Podaj poprawny zakres lat. Możliwe daty z przedziału 1800-2099'})
-    if(since > until) return res.send({error: `Parametr 'since' nie może mieć większej wartości od parametru 'until'`})
+    if(since < 1800 || since > 2099 || until < 1800 || until > 2099) return res.send({error: 'Please enter a valid range of years. Possible dates are 1800-2099'})
+    if(since > until) return res.send({error: `The 'since' parameter cannot have a greater value than the 'until' parameter`})
 
     for(let i = 0; i < count; i++) {
         let { firstName, lastName } = getNames()

@@ -91,8 +91,8 @@ const getPesel = (year) => {
 }
 
 const countErrorHandle = (count) => {
-    if(parseInt(count) > 3000) return {error: 'Maksymalna ilość użytkowników na jednym zapytaniu to 3000'}
-    if(count == 0) return {error: 'Minimalna ilość użytkowników do wygenerowania to 1'}
+    if(parseInt(count) > 3000) return {error: 'The maximum number of users to generate is 3000'}
+    if(count == 0) return {error: 'The minimum number of users to generate is 1'}
 
     return null
 }
