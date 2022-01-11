@@ -12,6 +12,10 @@ const corsOptions ={
 const app = express()
 app.use(cors(corsOptions))
 
+app.get('/', (req, res) => {
+    res.send('Hello')
+})
+
 app.get("/api/users/single-year", (req, res) => {
     const { count = 5, year } = req.query
     const data = []
