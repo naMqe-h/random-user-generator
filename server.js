@@ -12,6 +12,10 @@ const corsOptions ={
     optionSuccessStatus:200
 }
 
+res.header("Access-Control-Allow-Origin", "*");
+res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+
 const app = express()
 app.use(cors(corsOptions))
 
