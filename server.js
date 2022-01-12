@@ -12,10 +12,6 @@ const corsOptions ={
     optionSuccessStatus:200
 }
 
-res.header("Access-Control-Allow-Origin", "*");
-res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-
 const app = express()
 app.use(cors(corsOptions))
 
@@ -26,6 +22,8 @@ app.get('/', (req, res) => {
 app.get("/api/users/single-year", (req, res) => {
     const { count = 5, year } = req.query
     const data = []
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     if(countErrorHandle(count)) return res.send(isError)
 
@@ -55,6 +53,8 @@ app.get("/api/users", (req, res) => {
     const { count = 5, since = 1970, until = 2010 } = req.query
     since == until ? year = since : year = null
     const data = []
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     if(countErrorHandle(count)) return res.send(isError)
 
