@@ -93,15 +93,17 @@ const getPesel = (year) => {
 }
 
 const countErrorHandle = (count) => {
-    if(parseInt(count) > 3000) return {error: 'The maximum number of users to generate is 3000'}
-    if(count == 0) return {error: 'The minimum number of users to generate is 1'}
+    if(+count > 3000) return {message: 'The maximum number of users to generate is 3000'}
+    if(count == 0) return {message: 'The minimum number of users to generate is 1'}
 
     return null
 }
 
 const checkCorrectYears = (since, until) => {
-    if(since < 1800 || since > 2099 || until < 1800 || until > 2099) return res.send({error: 'Please enter a valid range of years. Possible dates are 1800-2099'})
-    if(since > until) return res.send({error: `The 'since' parameter cannot have a greater value than the 'until' parameter`})
+    if(since < 1800 || since > 2099 || until < 1800 || until > 2099) return {message: 'Please enter a valid range of years. Possible dates are 1800-2099'}
+    if(since > until) return {message: `The 'since' parameter cannot have a greater value than the 'until' parameter`}
+
+    return null
 }
 
 module.exports = { randomNumbers, getNames, getBirthday, getPesel, countErrorHandle, checkCorrectYears }

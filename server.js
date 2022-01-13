@@ -25,7 +25,8 @@ app.get("/api/users/single-year", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    if(countErrorHandle(count)) return res.send(isError)
+    const isError = countErrorHandle(count)
+    if(isError) return res.send(isError)
 
     if(year < 1800 || year > 2099) return res.send({error: `Enter a valid value of the 'year' parameter in the range 1800-2099`})
 
@@ -56,9 +57,11 @@ app.get("/api/users", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    if(countErrorHandle(count)) return res.send(isError)
+    const isError = countErrorHandle(count)
+    if(isError) return res.send(isError)
 
-    checkCorrectYears(since, until)
+    const isYearsError = checkCorrectYears(since, until)
+    if(isYearsError) return res.send(isYearsError)
 
     for(let i = 0; i < count; i++) {
         let { firstName, lastName, gender } = getNames()
