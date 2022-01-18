@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const PORT = process.env.PORT || 5000
-const { getNames, getBirthday, getPesel, generateLoginAndEmail, countErrorHandle, checkCorrectYears } = require('./functions')
+const { getNames, getBirthday, getPesel, generateLoginAndEmail, generatePassword, countErrorHandle, checkCorrectYears } = require('./functions')
 
 const corsOptions ={
     origin: [
@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 })
 
 app.get("/api/users/single-year", (req, res) => {
-    const { count = 5, year } = req.query
+    const { count = 5, year = 2003,  domain = 'oursite.com' } = req.query
     const data = []
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -35,7 +35,8 @@ app.get("/api/users/single-year", (req, res) => {
             const { firstName, lastName, gender } = getNames()
             const birthday = getBirthday(year)
             const pesel = getPesel(year)
-            const { login, email } = generateLoginAndEmail(firstName, lastName)
+            const { login, email } = generateLoginAndEmail(firstName, lastName, domain)
+            const password = generatePassword()
             
             const temp = {
                 firstName,
@@ -45,6 +46,7 @@ app.get("/api/users/single-year", (req, res) => {
                 gender,
                 login,
                 email,
+                password
             }
             data.push(temp)
         }
@@ -54,7 +56,7 @@ app.get("/api/users/single-year", (req, res) => {
 });
 
 app.get("/api/users", (req, res) => {
-    const { count = 5, since = 1970, until = 2010 } = req.query
+    const { count = 5, since = 1970, until = 2010, domain = 'oursite.com' } = req.query
     since == until ? year = since : year = null
     const data = []
     res.header("Access-Control-Allow-Origin", "*");
@@ -70,7 +72,8 @@ app.get("/api/users", (req, res) => {
         let { firstName, lastName, gender } = getNames()
         const birthday = getBirthday(year, since, until)
         const pesel = getPesel(birthday.split('.')[2])
-        const { login, email } = generateLoginAndEmail(firstName, lastName)
+        const { login, email } = generateLoginAndEmail(firstName, lastName, domain)
+        const password = generatePassword()
         
         const temp = {
             firstName,
@@ -80,6 +83,7 @@ app.get("/api/users", (req, res) => {
             gender,
             login,
             email,
+            password
         }
         data.push(temp)
     }

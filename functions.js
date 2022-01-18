@@ -92,10 +92,22 @@ const getPesel = (year) => {
     return tempPesel.join('')
 }
 
-const generateLoginAndEmail = (firstName, lastName) => {
+const generateLoginAndEmail = (firstName, lastName, domain) => {
     const login = (firstName.slice(0,3) + lastName.slice(0, 3) + Math.floor(Math.random() * 1000)).toLowerCase()
-    const email = login.toLowerCase() + '@oursite.com'
+    const email = login.toLowerCase() + '@' + domain
     return { login, email }
+}
+
+const generatePassword = () => {
+    const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_-+="
+    let password = '', temp
+
+    for(let i = 0; i < 10; i++) {
+        temp = Math.floor(Math.random() * characters.length)
+        password += characters.charAt(temp)
+    }
+    
+    return password
 }
 
 const countErrorHandle = (count) => {
@@ -112,4 +124,4 @@ const checkCorrectYears = (since, until) => {
     return null
 }
 
-module.exports = { randomNumbers, getNames, getBirthday, getPesel, generateLoginAndEmail, countErrorHandle, checkCorrectYears }
+module.exports = { randomNumbers, getNames, getBirthday, getPesel, generateLoginAndEmail, generatePassword, countErrorHandle, checkCorrectYears }
