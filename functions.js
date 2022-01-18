@@ -92,6 +92,12 @@ const getPesel = (year) => {
     return tempPesel.join('')
 }
 
+const generateLoginAndEmail = (firstName, lastName) => {
+    const login = (firstName.slice(0,3) + lastName.slice(0, 3) + Math.floor(Math.random() * 1000)).toLowerCase()
+    const email = login.toLowerCase() + '@oursite.com'
+    return { login, email }
+}
+
 const countErrorHandle = (count) => {
     if(+count > 3000) return {message: 'The maximum number of users to generate is 3000'}
     if(count == 0) return {message: 'The minimum number of users to generate is 1'}
@@ -106,4 +112,4 @@ const checkCorrectYears = (since, until) => {
     return null
 }
 
-module.exports = { randomNumbers, getNames, getBirthday, getPesel, countErrorHandle, checkCorrectYears }
+module.exports = { randomNumbers, getNames, getBirthday, getPesel, generateLoginAndEmail, countErrorHandle, checkCorrectYears }

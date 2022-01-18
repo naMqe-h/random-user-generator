@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const PORT = process.env.PORT || 5000
-const { getNames, getBirthday, getPesel, countErrorHandle, checkCorrectYears } = require('./functions')
+const { getNames, getBirthday, getPesel, generateLoginAndEmail, countErrorHandle, checkCorrectYears } = require('./functions')
 
 const corsOptions ={
     origin: [
@@ -34,7 +34,8 @@ app.get("/api/users/single-year", (req, res) => {
         for(let i = 0; i < count; i++) {
             const { firstName, lastName, gender } = getNames()
             const birthday = getBirthday(year)
-            const pesel = getPesel(year) 
+            const pesel = getPesel(year)
+            const { login, email } = generateLoginAndEmail(firstName, lastName)
             
             const temp = {
                 firstName,
@@ -42,6 +43,8 @@ app.get("/api/users/single-year", (req, res) => {
                 pesel,
                 birthday,
                 gender,
+                login,
+                email,
             }
             data.push(temp)
         }
@@ -67,6 +70,7 @@ app.get("/api/users", (req, res) => {
         let { firstName, lastName, gender } = getNames()
         const birthday = getBirthday(year, since, until)
         const pesel = getPesel(birthday.split('.')[2])
+        const { login, email } = generateLoginAndEmail(firstName, lastName)
         
         const temp = {
             firstName,
@@ -74,6 +78,8 @@ app.get("/api/users", (req, res) => {
             pesel,
             birthday,
             gender,
+            login,
+            email,
         }
         data.push(temp)
     }
