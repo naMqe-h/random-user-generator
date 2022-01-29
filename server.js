@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const PORT = process.env.PORT || 5000
-const { getNames, getBirthday, getPesel, generateLoginAndEmail, generatePassword, countErrorHandle, checkCorrectYears } = require('./functions')
+const { getNames, getBirthday, getPesel, generateEmail, generatePassword, countErrorHandle, checkCorrectYears } = require('./functions')
 
 const corsOptions ={
     origin: [
@@ -20,10 +20,10 @@ app.get('/', (req, res) => {
 })
 
 app.get("/api/users/single-year", (req, res) => {
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Origin", "*");
     const { count = 5, year = 2003,  domain = 'oursite.com' } = req.query
     const data = []
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     const isError = countErrorHandle(count)
     if(isError) return res.send(isError)
@@ -33,9 +33,9 @@ app.get("/api/users/single-year", (req, res) => {
     if(year) {
         for(let i = 0; i < count; i++) {
             const { firstName, lastName, gender } = getNames()
-            const birthday = getBirthday(year)
+            const { returnedBirthday: birthday, dateFirebase } = getBirthday(year)
             const pesel = getPesel(year)
-            const { login, email } = generateLoginAndEmail(firstName, lastName, domain)
+            const email = generateEmail(firstName, lastName, domain)
             const password = generatePassword()
             
             const temp = {
@@ -44,9 +44,9 @@ app.get("/api/users/single-year", (req, res) => {
                 pesel,
                 birthday,
                 gender,
-                login,
                 email,
-                password
+                password,
+                dateFirebase
             }
             data.push(temp)
         }
@@ -56,11 +56,11 @@ app.get("/api/users/single-year", (req, res) => {
 });
 
 app.get("/api/users", (req, res) => {
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Origin", "*");
     const { count = 5, since = 1970, until = 2010, domain = 'oursite.com' } = req.query
     since == until ? year = since : year = null
     const data = []
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     const isError = countErrorHandle(count)
     if(isError) return res.send(isError)
@@ -70,9 +70,9 @@ app.get("/api/users", (req, res) => {
 
     for(let i = 0; i < count; i++) {
         let { firstName, lastName, gender } = getNames()
-        const birthday = getBirthday(year, since, until)
+        const { returnedBirthday: birthday, dateFirebase } = getBirthday(year, since, until)
         const pesel = getPesel(birthday.split('.')[2])
-        const { login, email } = generateLoginAndEmail(firstName, lastName, domain)
+        const email = generateEmail(firstName, lastName, domain)
         const password = generatePassword()
         
         const temp = {
@@ -81,9 +81,9 @@ app.get("/api/users", (req, res) => {
             pesel,
             birthday,
             gender,
-            login,
             email,
-            password
+            password,
+            dateFirebase
         }
         data.push(temp)
     }

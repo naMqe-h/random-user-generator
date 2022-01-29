@@ -6,7 +6,10 @@ const numberOfNames = 149
 let randomFirst, randomLast, gender
 
 const randomDate = (start, end) => {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toLocaleDateString('pl')
+    const dateTemp = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+    const date = dateTemp.toLocaleDateString('pl')
+    const dateFirebase =  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toLocaleDateString('en-CA')
+    return { date, dateFirebase } 
 }
 
 const randomNumbers = () => {
@@ -32,17 +35,17 @@ const getNames = () => {
 }
 
 const getBirthday = (year, since, until) => {
+    let newDate
     if (year) {
-        birthday = randomDate(new Date(year, 0, 1), new Date(year, 12, 31))
-        dateSplit = birthday.split('.')
-        if(dateSplit[2] !== year) dateSplit[2] = year
-        return dateSplit.join('.')
+        newDate = randomDate(new Date(year, 0, 1), new Date(year, 12, 31))
+        if(newDate.date.split('.')[2] !== year) newDate.date.split('.')[2] = year
     } else {
-        birthday = randomDate(new Date(since, 0, 1), new Date(until, 12, 31))
-        dateSplit = birthday.split('.')
-        if(dateSplit[2] > until) dateSplit[2] = until
-        return dateSplit.join('.')
+        newDate = randomDate(new Date(since, 0, 1), new Date(until, 12, 31))
+        if(newDate.date.split('.')[2] > until) newDate.date.split('.')[2] = until
     }
+    dateSplit = newDate.date.split('.')
+    const returnedBirthday = dateSplit.join('.')
+    return { returnedBirthday, dateFirebase: newDate.dateFirebase }
     
 }
 
@@ -92,10 +95,9 @@ const getPesel = (year) => {
     return tempPesel.join('')
 }
 
-const generateLoginAndEmail = (firstName, lastName, domain) => {
-    const login = (firstName.slice(0,3) + lastName.slice(0, 3) + Math.floor(Math.random() * 1000)).toLowerCase()
-    const email = login.toLowerCase() + '@' + domain
-    return { login, email }
+const generateEmail = (firstName, lastName, domain) => {
+    const email = (firstName.slice(0,3) + lastName.slice(0, 3) + Math.floor(Math.random() * 1000)).toLowerCase() + '@' + domain
+    return email
 }
 
 const generatePassword = () => {
@@ -124,4 +126,4 @@ const checkCorrectYears = (since, until) => {
     return null
 }
 
-module.exports = { randomNumbers, getNames, getBirthday, getPesel, generateLoginAndEmail, generatePassword, countErrorHandle, checkCorrectYears }
+module.exports = { randomNumbers, getNames, getBirthday, getPesel, generateEmail, generatePassword, countErrorHandle, checkCorrectYears }
